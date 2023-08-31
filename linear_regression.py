@@ -14,42 +14,48 @@ Original file is located at
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-
 x=np.array([2,5,13,35,37,56]).reshape((-1,1))
 y=np.array([3,6,15,12,21,18])
-print(x)
-
-plt.scatter(x,y)
-plt.xlabel("IV")
-plt.ylabel("DV")
-plt.show()
-
 from sklearn.linear_model import LinearRegression
-
 SLR=LinearRegression()
+SLR.fit(x,y)
+pred1=SLR.predict(x)
+print(pred1)
+Wo=float(input("Enter the bais value"))
+W1=float(input("Enter the W1 value"))
+alph=float(input("Enter the learning rate"))
+n=int(input("Enter the number of iterations"))
+m=6
+for i in range(n):
+    mse1 = 0
+    mse2 = 0
+    cost = 0.00
+    for j in range(m):
+        pred = Wo + W1 * x[j]
+        mse1 += pred - y[j]
+        mse2 += (pred - y[j]) * x[j]
+        cost += (pred - y[j]) ** 2
 
-SLR.fit(x,y)#training
+    Wo = Wo - (alph / m) * mse1
+    W1 = W1 - (alph / m) * mse2
 
-pred=SLR.intercept_+(SLR.coef_*x)#calculating the value  of y predict based on multiplying weights (hypothesis)
+    cost /= (2.0 * m)
+pred=Wo+W1*x
+
 print(pred)
+print("cost is:",cost)
 
-pred=SLR.predict(x)#Inbuilt fuction for calculating hypothesis or y predicted value
-print(pred)
-
-from sklearn.metrics import mean_squared_error
-
-mse=mean_squared_error(y,pred)
-plt.plot(x,pred,color='Red',marker='o',linestyle='dotted')
-
-print("MSE:",mse)
-print("intercept",SLR.intercept_)
-print("slope",SLR.coef_)
+plt.scatter(x,y,color='Red')
+plt.plot(x,pred,color='Black',marker='*',linestyle='dotted')
+plt.show()
 
 #checking with new data of x
 x_new=np.arange(5).reshape((-1,1))
 print(x_new)
 y_new=SLR.predict(x_new)
 print(y_new)
+pred2=Wo+W1*x_new
+print(pred2)
 
 #Task 1-->Read an excel file to fetch x and y values and repeat linear regression.
 import pandas as pd
@@ -75,6 +81,7 @@ pred1=SLR2.predict(x1)#hypothesis
 from sklearn.metrics import mean_squared_error
 
 mse2=mean_squared_error(y1,pred1)
+plt.scatter(x1,y1,color='Black')
 plt.plot(x1,pred1,color='Red',marker='*')
 
 print("MSE:",mse2)
@@ -113,13 +120,9 @@ pred3=SLR3.predict(x2)
 from sklearn.metrics import mean_squared_error
 
 mse3=mean_squared_error(y2,pred3)
+plt.scatter(x2,y2,color="Yellow")
 plt.plot(x2,pred3,color='Black',marker='D')
 
 print("MSE:",mse3)
 print("Intercept",SLR3.intercept_)
 print("slope",SLR3.coef_)
-
-import datetime
-
-x = datetime.datetime(2023,8,28,11,19,45)
-print(x)
